@@ -167,22 +167,22 @@
               }
             }
           }],
-          'library_dirs': [ '<(node_root_dir)/lib' ],
-          'libraries': [
-            '-lkernel32',
-            '-luser32',
-            '-lgdi32',
-            '-lwinspool',
-            '-lcomdlg32',
-            '-ladvapi32',
-            '-lshell32',
-            '-lole32',
-            '-loleaut32',
-            '-luuid',
-            '-lodbc32',
-            '-ldelayimp',
-            '-lnode'
-         ],
+        ],
+        'library_dirs': [ '<(node_root_dir)/lib' ],
+        'libraries': [
+          '-lkernel32',
+          '-luser32',
+          '-lgdi32',
+          '-lwinspool',
+          '-lcomdlg32',
+          '-ladvapi32',
+          '-lshell32',
+          '-lole32',
+          '-loleaut32',
+          '-luuid',
+          '-lodbc32',
+          '-ldelayimp',
+          '-lnode'
         ],
         'msvs_disabled_warnings': [
           # warning C4251: 'node::ObjectWrap::handle_' : class 'v8::Persistent<T>'
