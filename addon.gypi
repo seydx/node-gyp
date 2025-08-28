@@ -170,6 +170,7 @@
         ],
         'library_dirs': [ '<(node_root_dir)/lib' ],
         'libraries': [
+          '<(node_lib_file)',
           '-lkernel32',
           '-luser32',
           '-lgdi32',
