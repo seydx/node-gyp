@@ -72,7 +72,7 @@
         # that the addon will work regardless of whether the node/iojs binary
         # is named node.exe, iojs.exe, or something else.
         'conditions': [
-          [ 'OS=="win"', {
+          [ 'OS=="msvc"', {
             'defines': [ 'HOST_BINARY=\"<(node_host_binary)<(EXECUTABLE_SUFFIX)\"', ],
             'sources': [
               '<(node_gyp_dir)/src/win_delay_load_hook.cc',

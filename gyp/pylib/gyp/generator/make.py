@@ -103,6 +103,8 @@ def CalculateVariables(default_variables, params):
         elif flavor == "zos":
             default_variables.setdefault("SHARED_LIB_SUFFIX", ".x")
             COMPILABLE_EXTENSIONS.update({".pli": "pli"})
+        elif flavor == "win":
+            default_variables.setdefault("SHARED_LIB_SUFFIX", ".dll")
         else:
             default_variables.setdefault("SHARED_LIB_SUFFIX", ".so")
         default_variables.setdefault("SHARED_LIB_DIR", "$(builddir)/lib.$(TOOLSET)")
@@ -144,6 +146,26 @@ def CalculateGeneratorInputInfo(params):
 # This is the replacement character.
 SPACE_REPLACEMENT = "?"
 
+
+LINK_COMMANDS_WINMINGW = """\
+quiet_cmd_alink = AR($(TOOLSET)) $@
+cmd_alink = rm -f $@ && $(AR.$(TOOLSET)) crs $@ $(filter %.o,$^)
+
+quiet_cmd_alink_thin = AR($(TOOLSET)) $@
+cmd_alink_thin = rm -f $@ && $(AR.$(TOOLSET)) crsT $@ $(filter %.o,$^)
+
+# Due to circular dependencies between libraries :(, we wrap the
+# special "figure out circular dependencies" flags around the entire
+# input list during linking.
+quiet_cmd_link = LINK($(TOOLSET)) $@
+cmd_link = $(LINK.$(TOOLSET)) -o $@ $(GYP_LDFLAGS) $(LDFLAGS.$(TOOLSET)) -Wl,--start-group $(LD_INPUTS) $(LIBS) -Wl,--end-group
+
+quiet_cmd_solink = SOLINK($(TOOLSET)) $@
+cmd_solink = $(LINK.$(TOOLSET)) -o $@ -shared $(GYP_LDFLAGS) $(LDFLAGS.$(TOOLSET)) -Wl,--out-implib,$(builddir)/$(@F).a -Wl,--whole-archive $(LD_INPUTS) -Wl,--no-whole-archive $(LIBS)
+
+quiet_cmd_solink_module = SOLINK_MODULE($(TOOLSET)) $@
+cmd_solink_module = $(LINK.$(TOOLSET)) -o $@ -shared $(GYP_LDFLAGS) $(LDFLAGS.$(TOOLSET)) $(filter-out FORCE_DO_CMD, $^) -Wl,--start-group $(LD_INPUTS) $(LIBS) -Wl,--end-group
+"""
 
 LINK_COMMANDS_LINUX = """\
 quiet_cmd_alink = AR($(TOOLSET)) $@
@@ -1696,6 +1718,8 @@ $(obj).$(TOOLSET)/$(TARGET)/%%.o: $(obj)/%%%s FORCE_DO_CMD
                 target_ext = ".a"
             elif self.flavor == "zos":
                 target_ext = ".x"
+            elif self.flavor == "win":
+                target_ext = ".dll"
             else:
                 target_ext = ".so"
         elif self.type == "none":
@@ -2719,6 +2743,13 @@ def GenerateOutput(target_list, target_dicts, data, params):
     elif flavor == "openbsd":
         copy_archive_arguments = "-pPRf"
         header_params.update({"copy_archive_args": copy_archive_arguments})
+    elif flavor == "win":
+        copy_archive_arguments = "-pPRf"
+        header_params.update(
+            {
+                "link_commands": LINK_COMMANDS_WINMINGW,
+            }
+        )
     elif flavor == "aix":
         copy_archive_arguments = "-pPRf"
         header_params.update(

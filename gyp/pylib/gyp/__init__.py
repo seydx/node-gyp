@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import os
 import os.path
 import re
 import shlex
@@ -536,7 +537,7 @@ def gyp_main(args):
         # Nothing in the variable, default based on platform.
         elif sys.platform == "darwin":
             options.formats = ["xcode"]
-        elif sys.platform in ("win32", "cygwin"):
+        elif sys.platform in ("win32", "cygwin") and "GCC" not in sys.version:
             options.formats = ["msvs"]
         else:
             options.formats = ["make"]
