@@ -2452,7 +2452,8 @@ $(obj).$(TOOLSET)/$(TARGET)/%%.o: $(obj)/%%%s FORCE_DO_CMD
     def Objectify(self, path):
                 """Convert a path to its output directory form."""
 
-                path_segment = path # Start with the original path segment
+                # Normalize path separators for Windows
+                path_segment = path.replace('\\', '/') if sys.platform == 'win32' else path
 
                 is_abs_path = os.path.isabs(path)
                 is_in_node_gyp_dir = False
