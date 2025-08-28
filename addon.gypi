@@ -186,21 +186,22 @@
               '-lnode',
             ],
           }, {
-            # MSVC libraries (Windows_NT)
+            # MinGW/Clang libraries for Windows
+            'library_dirs': [ '<(node_root_dir)/lib' ],
             'libraries': [
-              '-lkernel32.lib',
-              '-luser32.lib',
-              '-lgdi32.lib',
-              '-lwinspool.lib',
-              '-lcomdlg32.lib',
-              '-ladvapi32.lib',
-              '-lshell32.lib',
-              '-lole32.lib',
-              '-loleaut32.lib',
-              '-luuid.lib',
-              '-lodbc32.lib',
-              '-ldelayimp.lib',
-              '-l"<(node_lib_file)"'
+              '-lkernel32',
+              '-luser32',
+              '-lgdi32',
+              '-lwinspool',
+              '-lcomdlg32',
+              '-ladvapi32',
+              '-lshell32',
+              '-lole32',
+              '-loleaut32',
+              '-luuid',
+              '-lodbc32',
+              '-ldelayimp',
+              '-lnode'
             ],
           }]
         ],
