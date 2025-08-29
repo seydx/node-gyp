@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import argparse
 import copy
-import os
 import os.path
 import re
 import shlex
